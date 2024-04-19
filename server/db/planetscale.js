@@ -9,21 +9,21 @@ export default {
 		const pool = mysql.createPool({
 			host: 'aws.connect.psdb.cloud',
 			user: 'civlzznx5w8efejwaogk',
-			password: 'pscale_pw_ICSeqL8Ks9XHtLHhUc1JRIsHTfTu2VOcX3IeKzBdYsQ',
+			password: '',
 			database: 'portfolio-db',
 			ssl: {
 				rejectUnauthorized: true
 			}
 		});
 
-		pool.on('error', function (err) {
+		pool.on('error', function(err) {
 			console.error('MYSQL ERROR', err);
 		});
 
 		this.pool = pool;
 	},
 
-	runQuery: function (query, values, callback) {
+	runQuery: function(query, values, callback) {
 		if (values) {
 			this.pool.query(query, values, (error, results, fields) => {
 				if (error) {
@@ -54,11 +54,11 @@ export default {
 			});
 		}
 	},
-	execute: function (query, values, errorCount = 0) {
+	execute: function(query, values, errorCount = 0) {
 		let _this = this;
 
 		return new Promise((resolve, reject) => {
-			this.runQuery(query, values, function ({success, results, error}) {
+			this.runQuery(query, values, function({success, results, error}) {
 				if (success == true) {
 					if (errorCount > 0) {
 						console.log('MYSQL: Successfully finished a deadlocked query!');
@@ -86,7 +86,7 @@ export default {
 		});
 	},
 
-	query: async function (query, values, timeInSeconds) {
+	query: async function(query, values, timeInSeconds) {
 		let results;
 
 		results = await this.execute(query, values);
@@ -94,7 +94,7 @@ export default {
 		return results;
 	},
 
-	queryOne: async function (query, values, timeInSeconds) {
+	queryOne: async function(query, values, timeInSeconds) {
 		let results;
 
 		results = await this.execute(query, values);
@@ -102,7 +102,7 @@ export default {
 		return results[0];
 	},
 
-	insert: async function (table, value, update) {
+	insert: async function(table, value, update) {
 		var i,
 			j,
 			keys = [],
@@ -187,7 +187,7 @@ export default {
 
 		return await this.execute(query, values);
 	},
-	update: async function (table, values, where, limit, flags) {
+	update: async function(table, values, where, limit, flags) {
 		var i,
 			update = [],
 			query = 'UPDATE `' + table + '` SET ';
