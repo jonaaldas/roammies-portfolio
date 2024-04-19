@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
@@ -75,6 +74,3 @@ bun run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 # roammies-nuxt
-=======
-# roammies-portfolio
->>>>>>> efb639a6765f7c6fbcc33a5910f4aa2a2ea3c0ef
