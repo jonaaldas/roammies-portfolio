@@ -8,7 +8,7 @@ const productionDbConfig = {
 	database: 'roammies',
 	host: 'aws.connect.psdb.cloud',
 	user: '0vtwcykjr35wdtzj5h4y',
-	password: 'pscale_pw_OFS8M3RF2ArwCLDWNCrwswW6LUZgshP3soCydaEcE1w',
+	password: '',
 	ssl: {rejectUnauthorized: true}
 };
 // staging credentials
@@ -16,7 +16,7 @@ const stagingDbConfig = {
 	database: 'roammies',
 	host: 'aws.connect.psdb.cloud',
 	user: 'o3jv3zfyppwporcxrqqo',
-	password: 'pscale_pw_tis7drjXj5lKYWbQOAaroVsDoXCeAtqBMZPjfa4DwAU',
+	password: '',
 	ssl: {rejectUnauthorized: true},
 	multipleStatements: true
 };
