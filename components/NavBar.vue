@@ -49,9 +49,9 @@
 			</ul>
 		</div>
 		<div class="navbar-end space-x-4">
-			<button class="btn btn-primary" @click="loginAsAdmin">Log in Admin</button>
-			<button class="btn btn-secondary" @click="loginAsUser">Log in User</button>
-			<button class="btn" @click="checkout">Log in</button>
+			<button class="btn btn-sm btn-primary" @click="loginAsAdmin">Log in Admin</button>
+			<button class="btn btn-sm btn-secondary" @click="loginAsUser">Log in User</button>
+			<button class="btn btn-sm" @click="checkout">Log in</button>
 		</div>
 	</div>
 </template>
