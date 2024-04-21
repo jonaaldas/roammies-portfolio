@@ -19,7 +19,7 @@
 		"formidable": "3.5.1",
 		"fs": "0.0.1-security",
 		"jsonwebtoken": "9.0.2",
-		"nuxt": "3.9.3",
+		"nuxt": "^3.11.2",
 		"pg": "8.11.3",
 		"vue": "3.4.14",
 		"vue-router": "4.2.5"
