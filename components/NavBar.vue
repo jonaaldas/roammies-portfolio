@@ -67,8 +67,6 @@
 	};
 
 	const goTo = async url => {
-		console.log('🚀 ~ goTo ~ url:', url);
-		console.log('I am running');
 		await navigateTo(url);
 	};
 
