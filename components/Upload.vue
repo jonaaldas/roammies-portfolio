@@ -212,11 +212,12 @@
 					country: 'United States',
 					address: '7680 NW 5th St Building 3 apartment 2J',
 					city: 'NYC',
-					about: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap ",
+					about:
+						"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap ",
 					ages: '0-60',
 					website_link: 'www.google.com',
 					email: 'jonaaldas@gmail.com',
-					type: 'Co-working + Childcare',
+					type: 'Indoor Playground',
 					short_term_details: 'Lorem Ipsum is simply dummy text of the printing ',
 					sign_up_details: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when ',
 					image_name: ''
@@ -309,9 +310,9 @@
 			async upload() {
 				this.loading = true;
 				try {
-					this.data.image_name = await this.uploadImage();
+					this.demotData.image_name = await this.uploadImage();
 
-					this.data.availability = this.typeOfSchool;
+					this.demotData.availability = this.typeOfSchool;
 
 					const response = await $fetch('/api/save_school', {
 						method: 'POST',
@@ -320,7 +321,7 @@
 							'Content-Type': 'application/json'
 						},
 						body: {
-							data: this.data,
+							data: this.demotData,
 							isFeatured: this.isFeatured
 						}
 					});

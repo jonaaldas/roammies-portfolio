@@ -67,6 +67,7 @@ const parseFormData = async data => {
 			availability: newTypeOfSchool,
 			phone_number: cleanPhoneNumber
 		};
+		school.english = 1;
 
 		const res = await nitro.db.execute({
 			sql: `INSERT INTO schools (
@@ -136,58 +137,54 @@ const parseFormData = async data => {
 			}
 		});
 
-		if (res.rowCount >= 1) {
+		if (res.rowsAffected >= 1) {
 			return {
-				body: {success: true, message: 'School added successfully', schoolId: res.rows[0].id}
+				body: {success: true, message: 'School added successfully', schoolId: res.lastInsertRowid}
 			};
 		}
 	} catch (error) {
-		console.log('🚀 ~ parseFormData ~ error:', error);
+		console.log(error);
 	}
 };
 
 export default defineEventHandler(async event => {
-	try {
-		const {data, isFeatured} = await readBody(event);
-		const schoolInsertRes = await parseFormData(data);
-		if (schoolInsertRes.body.success) {
-			if (isFeatured) {
-				// const featuredRes = await nitro.db.insert('featured_schools', {
-				// 	school_id: schoolInsertRes.body.schoolId
-				// });
+	const {data, isFeatured} = await readBody(event);
+	const schoolInsertRes = await parseFormData(data);
 
-				const featuredRes = await nitro.db.execute({
-					sql: 'INSERT INTO featured_schools (school_id) VALUES (:school_id)',
-					args: {
-						school_id: schoolInsertRes.body.schoolId
-					}
-				});
+	if (schoolInsertRes.body.success) {
+		if (isFeatured) {
+			// const featuredRes = await nitro.db.insert('featured_schools', {
+			// 	school_id: schoolInsertRes.body.schoolId
+			// });
 
-				if (featuredRes.rowCount >= 1) {
-					return {
-						body: {
-							success: true,
-							message: 'School added to both schools and featured_schools successfully',
-							schoolId: schoolInsertRes.body.schoolId
-						}
-					};
-				} else {
-					return {
-						body: {
-							success: false,
-							message: 'Failed to make school a featured school, please contact the developer. ',
-							schoolId: schoolInsertRes.body.schoolId
-						}
-					};
+			const featuredRes = await nitro.db.execute({
+				sql: 'INSERT INTO featured_schools (school_id) VALUES (:school_id)',
+				args: {
+					school_id: schoolInsertRes.body.schoolId
 				}
+			});
+
+			if (featuredRes.rowsAffected >= 1) {
+				return {
+					body: {
+						success: true,
+						message: 'School added to both schools and featured_schools successfully',
+						schoolId: schoolInsertRes.body.schoolId
+					}
+				};
 			} else {
-				return schoolInsertRes;
+				return {
+					body: {
+						success: false,
+						message: 'Failed to make school a featured school, please contact the developer. ',
+						schoolId: schoolInsertRes.body.schoolId
+					}
+				};
 			}
 		} else {
 			return schoolInsertRes;
 		}
-	} catch (error) {
-		console.log(error);
-		return {status: 500, body: {success: false, message: 'An error has occur'}};
+	} else {
+		return schoolInsertRes;
 	}
 });
