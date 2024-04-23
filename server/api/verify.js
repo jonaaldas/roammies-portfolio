@@ -5,28 +5,29 @@ export default defineEventHandler(async event => {
 		// TODO: add error handling
 		const nitro = useNitroApp();
 		const {token} = getQuery(event, 'token');
-		console.log('🚀 ~ token:', token);
 
 		if (!token) {
 			return {status: 400, body: {error: 'Token is required', success: false}};
 		}
 
 		const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
-		console.log('🚀 ~ decoded:', decoded);
 
 		if (!decoded) {
 			return {status: 400, body: {error: 'Invalid token', success: false, error: decoded}};
 		}
-		console.log('jey');
 
 		const user = await getUserByEmail(decoded.email);
 		console.log('🚀 ~ user:', user);
-		if (!user) {
-			await nitro.db.insert('roammies_users', {
-				email: decoded.email,
-				payment_id: decoded.stripe_customer_id,
-				paid: 1,
-				role: 'user'
+
+		if (user.length == 0) {
+			const x = await nitro.db.execute({
+				sql: 'INSERT INTO users (email, payment_id, paid, role) VALUES (:email, :payment_id, :paid, :role)',
+				args: {
+					email: decoded.email,
+					payment_id: decoded.stripe_customer_id,
+					paid: 1,
+					role: 'user'
+				}
 			});
 		}
 

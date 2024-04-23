@@ -1,14 +1,13 @@
 export default defineEventHandler(async event => {
 	try {
 		const nitro = useNitroApp();
-		const query = `select country from locations`;
-		const locations = await nitro.db.query(query);
+		const locations = await nitro.db.execute('select country from locations');
 
 		return {
 			status: 200,
 			body: {
 				success: true,
-				locations
+				locations: locations.rows
 			}
 		};
 	} catch (error) {

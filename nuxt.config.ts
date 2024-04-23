@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   googleSignIn: {
     clientId: process.env.GOOGLE_CLIENT_ID,
   },
+  experimental: {
+    watcher: "chokidar",
+  },
   stripe: {
     server: {
       key: process.env.STRIPE_SECRET_KEY,

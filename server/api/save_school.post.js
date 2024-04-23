@@ -68,7 +68,73 @@ const parseFormData = async data => {
 			phone_number: cleanPhoneNumber
 		};
 
-		const res = await nitro.db.insert('schools', school);
+		const res = await nitro.db.execute({
+			sql: `INSERT INTO schools (
+                    name, 
+                    phone_number, 
+                    email, 
+                    about, 
+                    city, 
+                    country, 
+                    address, 
+                    english, 
+                    website_link, 
+                    availability, 
+                    image_name, 
+                    type, 
+                    facebook, 
+                    instagram, 
+                    lat, 
+                    lng, 
+                    min_age, 
+                    max_age, 
+                    sign_up_details, 
+                    short_term_details
+                ) VALUES (
+                    :name, 
+                    :phone_number, 
+                    :email, 
+                    :about, 
+                    :city, 
+                    :country, 
+                    :address, 
+                    :english, 
+                    :website_link, 
+                    :availability, 
+                    :image_name, 
+                    :type, 
+                    :facebook, 
+                    :instagram, 
+                    :lat, 
+                    :lng, 
+                    :min_age, 
+                    :max_age, 
+                    :sign_up_details, 
+                    :short_term_details
+                )`,
+			args: {
+				name: school.name,
+				phone_number: school.phone_number,
+				email: school.email,
+				about: school.about,
+				city: school.city,
+				country: school.country,
+				address: school.address,
+				english: school.english,
+				website_link: school.website_link,
+				availability: school.availability,
+				image_name: school.image_name,
+				type: school.type,
+				facebook: school.facebook,
+				instagram: school.instagram,
+				lat: school.lat,
+				lng: school.lng,
+				min_age: school.min_age,
+				max_age: school.max_age,
+				sign_up_details: school.sign_up_details,
+				short_term_details: school.short_term_details
+			}
+		});
 
 		if (res.rowCount >= 1) {
 			return {
@@ -86,9 +152,17 @@ export default defineEventHandler(async event => {
 		const schoolInsertRes = await parseFormData(data);
 		if (schoolInsertRes.body.success) {
 			if (isFeatured) {
-				const featuredRes = await nitro.db.insert('featured_schools', {
-					school_id: schoolInsertRes.body.schoolId
+				// const featuredRes = await nitro.db.insert('featured_schools', {
+				// 	school_id: schoolInsertRes.body.schoolId
+				// });
+
+				const featuredRes = await nitro.db.execute({
+					sql: 'INSERT INTO featured_schools (school_id) VALUES (:school_id)',
+					args: {
+						school_id: schoolInsertRes.body.schoolId
+					}
 				});
+
 				if (featuredRes.rowCount >= 1) {
 					return {
 						body: {

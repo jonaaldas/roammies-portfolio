@@ -17,18 +17,27 @@ export default defineEventHandler(async event => {
 		const user = await getUserByEmail(payload.email);
 		if (user) {
 			if (user.auth_provider !== 'google') {
-				console.log('🚀 ~ user:', user);
-				const res = await nitro.db.update(
-					'roammies_users',
-					{
-						auth_provider: 'google',
-						first_name: payload.given_name,
-						last_name: payload.family_name
-					},
-					{
+				// const res = await nitro.db.update(
+				// 	'roammies_users',
+				// 	{
+				// 		auth_provider: 'google',
+				// 		first_name: payload.given_name,
+				// 		last_name: payload.family_name
+				// 	},
+				// 	{
+				// 		email: payload.email
+				// 	}
+				// );
+
+				const res = await client.execute({
+					sql: 'UPDATE users SET auth_provider = :authProvider, first_name = :givenName, last_name = :familyName WHERE email = :email',
+					args: {
+						authProvider: 'google',
+						givenName: payload.given_name,
+						familyName: payload.family_name,
 						email: payload.email
 					}
-				);
+				});
 				if (res.affectedRows === 1) {
 					// create refresh token
 					const userInfo = {

@@ -73,13 +73,17 @@
 	};
 
 	const checkout = async () => {
+		const hasPaid = localStorage.getItem('paid');
+		console.log('🚀 ~ checkout ~ hasPaid:', hasPaid);
+
 		try {
 			loading.value = true;
 			const {body} = await $fetch('api/checkout', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
-				}
+				},
+				body: JSON.stringify(hasPaid)
 			});
 			if (!body) {
 				console.log('error');

@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {useServerStripe} from '#stripe/server';
 import sendEmail from '../utils/sendEmail';
@@ -15,9 +14,12 @@ export default defineEventHandler(async event => {
 
 		const nitro = useNitroApp();
 		const query = 'SELECT * FROM users WHERE email = ?';
-		let res = await nitro.db.query(query, [lowercasedEmail]);
+		let res = await nitro.db.execute({
+			sql: query,
+			args: [lowercasedEmail]
+		});
 
-		if (res[0] && res[0].auth_provider === 'google') {
+		if (res.rows[0] && res.rows[0].auth_provider === 'google') {
 			console.log('Google auth provider found');
 			const userInfo = {
 				email: res[0].email,
@@ -25,7 +27,7 @@ export default defineEventHandler(async event => {
 				paid: res[0].paid,
 				payment_id: res[0].payment_id
 			};
-			console.log('🚀 ~ userInfo:', userInfo);
+
 			const refreshToken = jwt.sign(userInfo, process.env.JWT_REFRESH_TOKEN, {expiresIn: '30d'});
 
 			setCookie(event, 'Authorization', refreshToken, {
@@ -35,12 +37,12 @@ export default defineEventHandler(async event => {
 			return {status: 200, body: {message: 'Logged in', success: true, loggedIn: true}};
 		}
 
-		if (res.length > 0) {
+		if (res.rows.length > 0) {
 			const user = {
-				email: res[0].email,
-				role: res[0].role,
-				paid: res[0].paid,
-				payment_id: res[0].payment_id
+				email: res.rows[0].email,
+				role: res.rows[0].role,
+				paid: res.rows[0].paid,
+				payment_id: res.rows[0].payment_id
 			};
 			const accessToken = jwt.sign(user, process.env.JWT_ACCESS_TOKEN, {expiresIn: '1h'});
 			const emailResponse = await sendEmail('login', lowercasedEmail, accessToken);
@@ -54,17 +56,23 @@ export default defineEventHandler(async event => {
 			}
 		}
 
-		// create stripe customer
 		const stripe = await useServerStripe(event);
 		const customer = await stripe.customers.create({
 			email: lowercasedEmail
 		});
 
-		await nitro.db.insert('users', {email: lowercasedEmail, payment_id: customer.id, role: 'user'});
+		await nitro.db.execute({
+			sql: 'INSERT INTO users (email, payment_id, role) VALUES (:email, :payment_id, :role)',
+			args: {
+				email: lowercasedEmail,
+				payment_id: customer.id,
+				role: 'user'
+			}
+		});
 
 		const user = {email: lowercasedEmail};
 		const accessToken = jwt.sign(user, process.env.JWT_ACCESS_TOKEN, {expiresIn: '1h'});
-		// setCookie(event, 'Authorization', accessToken);
+
 		const emailResponse = await sendEmail('login', lowercasedEmail, accessToken);
 		if (emailResponse.success === false) {
 			return {status: 500, body: {error: 'Failed to send email', success: false}};
@@ -75,10 +83,8 @@ export default defineEventHandler(async event => {
 			};
 		}
 	} catch (error) {
-		//  Log the error for debugging purposes
 		console.error('Registration Error:', error);
 
-		//  Respond with a generic error message
 		return {status: 500, body: {error: error || 'Something went wrong please try again. ', success: false}};
 	}
 });
