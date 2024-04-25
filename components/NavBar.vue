@@ -9,7 +9,7 @@
 				</div>
 				<ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
 					<li><span @click="goTo('/dashboard')">Dashboard</span></li>
-					<li><span @click="() => navigateTo('/admin/dashboard')">Admin Dashboard</span></li>
+
 					<li><span @click="navigateTo('/profile')">Profile Page</span></li>
 					<li>
 						<span
@@ -32,7 +32,7 @@
 		<div class="navbar-center hidden lg:flex">
 			<ul class="menu menu-horizontal px-1">
 				<li><span @click="() => navigateTo('/dashboard')">Dashboard</span></li>
-				<li><span @click="() => navigateTo('/admin/dashboard')">Admin Dashboard</span></li>
+
 				<li><span @click="navigateTo('/profile')">Profile Page</span></li>
 				<li>
 					<span
@@ -49,7 +49,6 @@
 			</ul>
 		</div>
 		<div class="navbar-end space-x-4">
-			<button class="btn btn-sm btn-primary" @click="loginAsAdmin">Log in Admin</button>
 			<button class="btn btn-sm btn-secondary" @click="loginAsUser">Log in User</button>
 			<button class="btn btn-sm" @click="checkout">Log in</button>
 		</div>

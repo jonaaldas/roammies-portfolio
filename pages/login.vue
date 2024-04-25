@@ -26,16 +26,7 @@
 							<span v-if="error" class="text-color-red">{{ message }}</span>
 							<span v-if="!error" class="text-color-red">{{ message }}</span>
 							<button class="w-full btn-active btn btn-secondary" @click="login">
-								<span v-if="!loading">Log In</span>
-								<span v-if="loading" class="loading loading-xs"></span>
-							</button>
-							<button class="w-full btn-active btn btn-secondary" @click="register">
-								<span v-if="!loading">Register</span>
-								<span v-if="loading" class="loading loading-xs"></span>
-							</button>
-
-							<button class="w-full btn-active btn btn-primary" @click="loginAsAdmin">
-								<span v-if="!loading">Log in Admin</span>
+								<span v-if="!loading">Log In/Register</span>
 								<span v-if="loading" class="loading loading-xs"></span>
 							</button>
 
@@ -70,8 +61,6 @@
 				}
 			}
 		});
-		console.log('🚀 ~ loginGoogle ~ error:', error);
-		console.log('🚀 ~ loginGoogle ~ data:', data);
 	};
 
 	const login = async () => {
